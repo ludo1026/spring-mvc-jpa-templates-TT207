@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>D:\utilisateurs\luchabou\git\spring-mvc-jpa-templates-TT207\doc\.HOWTO.md.html</title>
+<title>D:\utilisateurs\luchabou\git\spring-mvc-jpa-templates-TT207\.README.md.html</title>
 
 
 <style type="text/css">
@@ -449,35 +449,30 @@ function setDocumentScrollTop(ypos)
 
 </head>
 <body class="markdown-body">
-<h1> <a name="tutorial" class="anchor" href="..md.html#tutorial"><span class="octicon octicon-link"></span></a>Tutorial</h1> 
-<p>This tutorial indicates how to create a new project and generate source code from an existing database.</p> 
-<p>This tutorial needs some requirements which are not mandatory otherwise to use Telosys Tools.</p> 
-<h2> <a name="requirements" class="anchor" href="..md.html#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2> 
-<p>You need to download :</p> 
+<h1> <a name="spring-mvc-jpa-templates-tt207" class="anchor" href="..md.html#spring-mvc-jpa-templates-tt207"><span class="octicon octicon-link"></span></a>spring-mvc-jpa-templates-TT207</h1> 
+<p>Spring MVC + JPA templates for Telosys Tools v2.0.7</p> 
+<h2> <a name="description" class="anchor" href="..md.html#description"><span class="octicon octicon-link"></span></a>Description</h2> 
+<p>These templates generates J2EE web application based on Spring MVC, Spring IOC, Spring Data and JPA. Bootstrap v3 and JQuery are used in front-end pages for reponsive design and navigators compatibility.</p> 
+<p>The main objective is to respect the guidelines and the best practices in J2EE Web applications development.</p> 
+<p>For that, unit and integration tests are generated. The integration tests can used in-memory Sql database or a real testing database.</p> 
+<p>The application manages each entity with CRUD (Create, Read, Update, Delete) operations.</p> 
+<h2> <a name="architecture" class="anchor" href="..md.html#architecture"><span class="octicon octicon-link"></span></a>Architecture</h2> 
+<p><a href="doc/image/layers2.png" target="_blank"><img src="doc/image/layers2.png" alt="Diagram" style="max-width:100%;" /></a></p> 
+<p>Presentation layer: </p> 
 <ul> 
- <li>Eclipse, </li> 
- <li>Telosys Tools version 2.0.7 plugin for Eclipse</li> 
- <li>M2eclipse for Kepler (with WTP support)</li> 
+ <li>Spring MVC, JSPX Pages, Jquery, Bootstrap</li> 
 </ul>
-<h2> <a name="steps" class="anchor" href="..md.html#steps"><span class="octicon octicon-link"></span></a>Steps</h2> 
-<ol> 
- <li>In eclipse, create new &quot;Maven Project&quot;</li> 
- <li>In &quot;New Manen Project&quot; wizard, select &quot;Create a simple project (skip archetype selection)&quot;</li> 
- <li>Click &quot;Next&quot;</li> 
- <li>Define &quot;Group Id&quot;, &quot;Artifact Id&quot;</li> 
- <li>Select &quot;war&quot; for &quot;Packaging&quot;</li> 
- <li>Click &quot;Finish&quot;</li> 
- <li>The new project is added in the workspace</li> 
- <li>Open the properties window of this new project</li> 
- <li>In the left entries, select &quot;Telosys Tools&quot;</li> 
- <li>&quot;Telosys Tools&quot; properties window is displayed</li> 
- <li>Fill all project informations in &quot;General&quot;, &quot;Packages&quot; and &quot;Folders&quot; tab</li> 
- <li>Click on &quot;init Telosys Tools&quot; in the &quot;General&quot; tab =&gt; The &quot;Telosys Tools&quot; directory is now added in the project</li> 
- <li>In the &quot;download&quot; tab, download from this Github repository the &quot;spring-mvc-jpa-templates&quot;</li> 
- <li>After download, close the project properties winodow</li> 
- <li> </li>
-</ol>
-<h2> <a name="how-to-use-it" class="anchor" href="..md.html#how-to-use-it"><span class="octicon octicon-link"></span></a>How to use it</h2> 
-<p>Open Use all templates of &quot;spring-mvc-jpa-templates-TT207&quot; Select </p>
+<p>Business logic layer: </p> 
+<ul> 
+ <li>Services injected by Spring IOC</li> 
+</ul>
+<p>Database Access Objects layer: </p> 
+<ul> 
+ <li>Java Persistance API, Spring Data</li> 
+</ul>
+<h2> <a name="tutorial" class="anchor" href="..md.html#tutorial"><span class="octicon octicon-link"></span></a>Tutorial</h2> 
+<ul> 
+ <li><a href="doc\.HOWTO.md.html">HOWTO</a></li> 
+</ul>
 </body>
 </html>
