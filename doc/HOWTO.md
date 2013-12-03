@@ -29,8 +29,8 @@ Steps
 11. Fill all project informations in "General", "Packages" and "Folders" tab
 12. Click on "init Telosys Tools" in the "General" tab => The "Telosys Tools" directory is now added in the project
 14. In the "download" tab, download from this Github repository the "spring-mvc-jpa-templates"
-16. After download, close the project properties winodow
-17. 
+16. After download, close the project properties window
+
 
 How to use it
 ---
