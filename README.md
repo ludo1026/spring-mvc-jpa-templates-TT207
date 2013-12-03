@@ -27,36 +27,7 @@ Business logic layer:
 Database Access Objects layer: 
 - Java Persistance API, Spring Data
 
-Requirements
+Tutorial
 ---
 
-You need to download :
-- Eclipse Kepler
-- Telosys Tools version 2.0.7 plugin for Eclipse
-- M2eclipse for Kepler (with WTP support)
-
-Steps
----
-
-1. In eclipse, create new "Maven Project"
-2. In "New Manen Project" wizard, select "Create a simple project (skip archetype selection)"
-3. Click "Next"
-4. Define "Group Id", "Artifact Id"
-5. Select "war" for "Packaging"
-6. Click "Finish"
-7. The new project is added in the workspace
-8. Open the properties window of this new project
-9. In the left entries, select "Telosys Tools"
-10. Fill all project informations and Click on "init Telosys Tools"
-11. The "Telosys Tools" directory is now added to the project
-12. Click on the "download" panel of Telosys Tools properties windows
-13. Download from this Github repository the "spring-mvc-jpa-templates"
-14. Close the project properties winodow
-15.  
-
-How to use it
----
-
-Open 
-Use all templates of "spring-mvc-jpa-templates-TT207"
-Select 
+- [HOWTO](docs/HOWTO.md)
