@@ -1,0 +1,69 @@
+package ${target.javaPackageFromFolder(${SRC})};
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import ${ENTITY_PKG}.${beanClass.name};
+#if ( $beanClass.hasCompositePrimaryKey() )
+import ${ENTITY_PKG}.${beanClass.name}Id;
+#set( $keyType = "${beanClass.name}Id" )
+#set( $keyName = "id" )
+#else
+#foreach( $field in $entity.keyAttributes )
+#set( $keyType = "$field.wrapperType" )
+#set( $keyName = "$field.formatedName(0)" )
+#end
+#end
+import ${ROOT_PKG}.dao.jpa.${beanClass.name}Dao;
+import ${ROOT_PKG}.dao.repository.${beanClass.name}Repository;
+import ${ROOT_PKG}.service.${beanClass.name}Service;
+
+/**
+ * Service : ${beanClass.name}.
+ */
+@Component
+@Transactional
+public class ${beanClass.name}ServiceImpl implements ${beanClass.name}Service {
+		
+	@Resource
+	private ${beanClass.name}Dao ${beanClass.name.toLowerCase()}Dao;
+	@Resource
+	private ${beanClass.name}Repository ${beanClass.name.toLowerCase()}Repository;
+	
+	public ${beanClass.name} load(final $keyType $keyName) {
+		return ${beanClass.name.toLowerCase()}Repository.findOne($keyName);
+	}
+	
+	public ${beanClass.name} save(final ${beanClass.name} ${beanClass.name.toLowerCase()}) {
+		return ${beanClass.name.toLowerCase()}Repository.save(${beanClass.name.toLowerCase()});
+	}
+
+	public void delete(final $keyType $keyName) {
+		${beanClass.name.toLowerCase()}Repository.delete($keyName);
+	}
+
+	public List<${beanClass.name}> search(final Map<String,Object> criteria) {
+		return ${beanClass.name.toLowerCase()}Dao.search(criteria);
+	}
+
+	public List<${beanClass.name}> loadAll() {
+		List<${beanClass.name}> ${beanClass.name.toLowerCase()}s = new ArrayList<${beanClass.name}>();
+		for (${beanClass.name} ${beanClass.name.toLowerCase()} : ${beanClass.name.toLowerCase()}Repository.findAll()) {
+			${beanClass.name.toLowerCase()}s.add(${beanClass.name.toLowerCase()});
+		}
+		return ${beanClass.name.toLowerCase()}s;
+	}
+	
+	@Transactional(readOnly=true)
+	public Page<${beanClass.name}> findAllByPage(Pageable pageable) {
+		return ${beanClass.name.toLowerCase()}Repository.findAll(pageable);
+	}
+	
+}

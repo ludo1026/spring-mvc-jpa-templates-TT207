@@ -1,0 +1,138 @@
+package ${target.javaPackageFromFolder(${TEST_SRC})};
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import ${ENTITY_PKG}.${beanClass.name};
+#if ( $beanClass.hasCompositePrimaryKey() )
+import ${ENTITY_PKG}.${beanClass.name}Id;
+#set( $keyType = "${beanClass.name}Id" )
+#set( $keyName = "id" )
+#set( $keySetter = "setId" )
+#set( $keyGetter = "getId" )
+#set( $keyInit = ${keyType}+" "+${keyName}+" = new "+${keyType}+"();" )
+#else
+#foreach( $field in $entity.keyAttributes )
+#set( $keyType = "$field.wrapperType" )
+#set( $keyName = "$field.formatedName(0)" )
+#set( $keySetter = "$field.setter" )
+#set( $keyGetter = "$field.getter" )
+#if( $keyType == "String" )
+	#set( $keyInit = ${keyType}+" "+${keyName}+" = ""test"";" )
+#elseif( $keyType == "Integer" || $keyType == "Long" || $keyType == "Double" || $keyType == "Short" || $keyType == "BigDecimal" || $keyType == "BigInteger" )
+	#set( $keyInit = ${keyType}+" "+${keyName}+" = "+${keyType}+".valueOf(""1"");" )
+#else
+	#set( $keyInit = ${keyType}+" "+${keyName}+" = new "+${keyType}+"();" )
+#end
+#end
+#end
+
+@RunWith(MockitoJUnitRunner.class)
+public class ${beanClass.name}DaoUnitTest {
+
+	@InjectMocks
+	private ${beanClass.name}DaoImpl ${beanClass.name.toLowerCase()}Dao;
+	@Mock
+	private EntityManager entityManager;
+
+	@Test
+	public void load() {
+		// Given
+		${keyInit}
+
+		${beanClass.name} ${beanClass.name.toLowerCase()} = new ${beanClass.name}();
+		${beanClass.name.toLowerCase()}.${keySetter}(${keyName});
+
+		when(entityManager.find(${beanClass.name}.class, ${keyName})).thenReturn(${beanClass.name.toLowerCase()});
+
+		// When
+		${beanClass.name} ${beanClass.name.toLowerCase()}Result = ${beanClass.name.toLowerCase()}Dao.load(${keyName});
+
+		// Then
+		assertEquals(${keyName}, ${beanClass.name.toLowerCase()}Result.${keyGetter}());
+	}
+
+	@Test
+	public void save() {
+		// Given
+		${beanClass.name} ${beanClass.name.toLowerCase()}ToSave = new ${beanClass.name}();
+		${beanClass.name} ${beanClass.name.toLowerCase()}Saved = new ${beanClass.name}();
+
+		when(entityManager.merge(${beanClass.name.toLowerCase()}ToSave)).thenReturn(${beanClass.name.toLowerCase()}Saved);
+
+		// When
+		${beanClass.name} ${beanClass.name.toLowerCase()}Result = ${beanClass.name.toLowerCase()}Dao.save(${beanClass.name.toLowerCase()}ToSave);
+
+		// Then
+		assertTrue(${beanClass.name.toLowerCase()}Result != ${beanClass.name.toLowerCase()}ToSave);
+		assertTrue(${beanClass.name.toLowerCase()}Result == ${beanClass.name.toLowerCase()}Saved);
+	}
+
+	@Test
+	public void delete() {
+		// Given
+		${keyInit}
+
+		${beanClass.name} ${beanClass.name.toLowerCase()} = new ${beanClass.name}();
+		when(entityManager.find(${beanClass.name}.class, ${keyName})).thenReturn(${beanClass.name.toLowerCase()});
+
+		// When
+		${beanClass.name.toLowerCase()}Dao.delete(${keyName});
+
+		// Then
+		verify(entityManager).remove(${beanClass.name.toLowerCase()});
+	}
+
+	@Test
+	public void loadAll() {
+		// Given
+		List<${beanClass.name}> ${beanClass.name.toLowerCase()}s = new ArrayList<${beanClass.name}>();
+		${beanClass.name.toLowerCase()}s.add(new ${beanClass.name}());
+
+		Query query = mock(Query.class);
+		when(entityManager.createQuery("from " + ${beanClass.name}.class.getName()))
+				.thenReturn(query);
+
+		when(query.getResultList()).thenReturn(${beanClass.name.toLowerCase()}s);
+
+		// When
+		List<${beanClass.name}> ${beanClass.name.toLowerCase()}sResult = ${beanClass.name.toLowerCase()}Dao.loadAll();
+
+		// Then
+		assertTrue(${beanClass.name.toLowerCase()}sResult == ${beanClass.name.toLowerCase()}s);
+	}
+
+	@Test
+	public void search_without_criteria() {
+		// Given
+		List<${beanClass.name}> ${beanClass.name.toLowerCase()}s = new ArrayList<${beanClass.name}>();
+		${beanClass.name.toLowerCase()}s.add(new ${beanClass.name}());
+
+		Query query = mock(Query.class);
+		when(entityManager.createQuery("from " + ${beanClass.name}.class.getName()))
+				.thenReturn(query);
+
+		when(query.getResultList()).thenReturn(${beanClass.name.toLowerCase()}s);
+
+		// When
+		List<${beanClass.name}> ${beanClass.name.toLowerCase()}sResult = ${beanClass.name.toLowerCase()}Dao.search(null);
+
+		// Then
+		assertTrue(${beanClass.name.toLowerCase()}sResult == ${beanClass.name.toLowerCase()}s);
+	}
+
+}

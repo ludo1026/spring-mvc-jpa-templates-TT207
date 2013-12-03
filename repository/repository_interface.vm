@@ -1,0 +1,19 @@
+package ${target.javaPackageFromFolder(${SRC})};
+
+import org.springframework.data.repository.PagingAndSortingRepository;
+import ${ENTITY_PKG}.${beanClass.name};
+#if ( $beanClass.hasCompositePrimaryKey() )
+import ${ENTITY_PKG}.${beanClass.name}Id;
+#set( $keyType = "${beanClass.name}Id" )
+#else
+#foreach( $field in $entity.keyAttributes )
+#set( $keyType = "$field.wrapperType" )
+#end
+#end
+
+/**
+ * Repository : ${beanClass.name}.
+ */
+public interface ${beanClass.name}Repository extends PagingAndSortingRepository<${beanClass.name}, $keyType> {
+
+}

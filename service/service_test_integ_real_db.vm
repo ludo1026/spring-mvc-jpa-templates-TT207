@@ -1,0 +1,75 @@
+package ${target.javaPackageFromFolder(${TEST_SRC})};
+
+import javax.annotation.Resource;
+
+import org.junit.Assert;
+import org.junit.Test;
+import ${ENTITY_PKG}.${beanClass.name};
+#if ( $beanClass.hasCompositePrimaryKey() )
+import ${ENTITY_PKG}.${beanClass.name}Id;
+#set( $keyType = "${beanClass.name}Id" )
+#set( $keyName = "id" )
+#set( $keyGetter = "getId" )
+#set( $keySetter = "setId" )
+#set( $keyInit = ${keyType}+" "+${keyName}+" = new "+${keyType}+"();" )
+#else
+#foreach( $field in $entity.keyAttributes )
+#set( $keyType = "$field.wrapperType" )
+#set( $keyName = "$field.formatedName(0)" )
+#set( $keyGetter = "$field.getter" )
+#set( $keySetter = "$field.setter" )
+#if( $keyType == "String" )
+	#set( $keyInit = ${keyType}+" "+${keyName}+" = ""1"";" )
+#elseif( $keyType == "Integer" || $keyType == "Long" || $keyType == "Double" || $keyType == "Short" || $keyType == "BigDecimal" || $keyType == "BigInteger" )
+	#set( $keyInit = ${keyType}+" "+${keyName}+" = "+${keyType}+".valueOf(""1"");" )
+#else
+	#set( $keyInit = ${keyType}+" "+${keyName}+" = new "+${keyType}+"();" )
+#end
+#end
+#end
+
+import ${ROOT_PKG}.test.common.AbstractRealDBTest;
+
+public class ${beanClass.name}ServiceRealDBIntegTest extends AbstractRealDBTest {
+
+	@Override
+	protected String getDataFilename() {
+		return null;
+	}
+
+	@Resource
+	private ${beanClass.name}Service ${beanClass.name.toLowerCase()}Service;
+
+	@Test
+	public void cycle_vie_complet() {
+
+		${keyInit}
+
+		${beanClass.name} ${beanClass.name.toLowerCase()} = new ${beanClass.name}();
+		${beanClass.name.toLowerCase()}.${keySetter}(${keyName});
+		//${beanClass.name.toLowerCase()}.setName("Test " + ${keyName});
+
+		// Create
+		this.${beanClass.name.toLowerCase()}Service.save(${beanClass.name.toLowerCase()});
+
+		// Search
+		${beanClass.name.toLowerCase()} = this.${beanClass.name.toLowerCase()}Service.load(${keyName});
+		Assert.assertNotNull(${beanClass.name.toLowerCase()});
+
+		// Update
+		//${beanClass.name.toLowerCase()}.setName("Test 2 " + ${keyName});
+		${beanClass.name.toLowerCase()} = this.${beanClass.name.toLowerCase()}Service.save(${beanClass.name.toLowerCase()});
+
+		// Search
+		${beanClass.name.toLowerCase()} = this.${beanClass.name.toLowerCase()}Service.load(${keyName});
+		//Assert.assertEquals("Test 2 " + ${keyName}, ${beanClass.name.toLowerCase()}.getName());
+
+		// Delete
+		this.${beanClass.name.toLowerCase()}Service.delete(${beanClass.name.toLowerCase()}.${keyGetter}());
+
+		// Search
+		${beanClass.name.toLowerCase()} = this.${beanClass.name.toLowerCase()}Service.load(${keyName});
+		Assert.assertNull(${beanClass.name.toLowerCase()});
+	}
+
+}

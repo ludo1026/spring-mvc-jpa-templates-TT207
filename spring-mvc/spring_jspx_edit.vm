@@ -1,0 +1,105 @@
+#set( $_ = "$" )
+#set( $deletecall = "" )
+#set( $deleteparameters = "" )
+#set( $urlparameters = "" )
+#if ( $beanClass.hasCompositePrimaryKey() )
+  #foreach( $field in $beanClass.keyAttributes )
+	#if ( $deletecall != "" )
+		#set( $deletecall = "${deletecall}, " )
+	#end
+	#if ( $deleteparameters != "" )
+		#set( $deleteparameters = "${deleteparameters}, " )
+	#end
+	#if ( $urlparameters != "" )
+		#set( $urlparameters = "${urlparameters} + '${AMP}' + " )
+	#end
+	
+	#set( $deletecall = "${deletecall}'${field.name}' />'" )
+	#set( $deleteparameters = "${deleteparameters}${field.name}in" )
+	#set( $urlparameters = "${urlparameters}'restid.${field.name}=' + ${field.name}in" )
+  #end
+#else
+	#set( $keyattribute = "current." + ${beanClass.keyAttributes.get(0).formatedName(0)} )
+	#set( $deletecall = "'${${keyattribute}}'" )
+	#set( $deleteparameters = "xxx" )
+	#set( $deleteparameters = "id${beanClass.name.toLowerCase()}" )
+	#set( $urlparameters = "xxx" )
+#end
+#if ( $beanClass.hasCompositePrimaryKey() )
+#set( $keyType = "${beanClass.name}Key" )
+#set( $keyName = "id" )
+#set( $keyURLPath = "")
+#foreach( $field in $entity.keyAttributes )
+#if( $field.isKeyElement() )
+#set( $keyURLPath = $keyURLPath+"/${"+$keyName+"."+${field.formatedName(0)}+"}" )
+#end
+#end
+#else
+#foreach( $field in $entity.keyAttributes )
+#set( $keyType = "$field.wrapperType" )
+#set( $keyName = "$field.formatedName(0)" )
+#set( $keyURLPath = "/${"+${field.formatedName(0)}+"}" )
+#end
+#end
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:joda="http://www.joda.org/joda/time/tags" xmlns:s="http://www.springframework.org/tags" xmlns:form="http://www.springframework.org/tags/form" version="2.0">
+<jsp:directive.page contentType="text/html;charset=UTF-8"/>
+<jsp:output omit-xml-declaration="yes"/>
+
+	<fieldset class="col-sm-12 bordure">
+		<legend class="legende"><s:message code="${beanClass.name.toLowerCase()}"/></legend>
+		
+		<c:if test="${_}{not empty message}">
+			<div id="message" class="${_}{message.type}">${_}{message.message}</div>
+		</c:if>
+
+	    <div class="container">
+	    	<s:url value="/${beanClass.name.toLowerCase()}" var="url_form_submit" />
+			<form:form modelAttribute="${beanClass.name.toLowerCase()}" cssClass="well" method="PUT" action="${_}{url_form_submit}">
+				<table>
+#foreach( $field in $beanClass.attributes )
+					<tr>
+						<th align="left"><s:message code="${beanClass.name.toLowerCase()}.${field.formatedName(0)}"/></th>
+#if( $field.isKeyElement() && $beanClass.hasCompositePrimaryKey() )
+#set( $fieldName = ${keyName}+"."+${field.formatedName(0)} )
+#else
+#set( $fieldName = ${field.formatedName(0)} )
+#end
+						<td>
+#if( $field.wrapperType == "Boolean" )
+							<form:checkbox path="$fieldName" class="form-control"/>
+## #elseif( $field.wrapperType == "Date" )
+##							<form:input path="$fieldName" id="${beanClass.name.toLowerCase()}_${fieldName}_input" class="form-control"/>
+##							<script type="text/javascript">
+##								$('#${beanClass.name.toLowerCase()}_${fieldName}_input').datepicker({
+##								});
+##							</script>
+#else
+							<form:input path="$fieldName" class="form-control"/>
+#end
+						</td>
+						<td>
+							<form:errors cssClass="alert alert-danger" id="_${fieldName}_error_id" path="$fieldName" />
+						</td>
+					</tr>
+#end
+					<tr>
+						<td colspan="2">
+							<form:errors/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+					 		<button type="submit" class="btn btn-info"><s:message code="save"/></button>
+							<button type="reset" class="btn btn-info"><s:message code="reset"/></button>
+							<s:url var="delete${beanClass.name}Url" value="/${beanClass.name.toLowerCase()}/delete${keyURLPath}"/>
+							<a class="btn btn-info" href="${_}{delete${beanClass.name}Url}"><s:message code="delete"/></a>
+							<s:url var="all${beanClass.name}Url" value="/${beanClass.name.toLowerCase()}"/>
+							<a class="btn btn-info" href="${_}{all${beanClass.name}Url}"><s:message code="list"/></a>
+						</td>
+					</tr>
+				</table>
+			</form:form>
+		</div>	
+    </fieldset>
+</div>

@@ -1,0 +1,77 @@
+package ${target.javaPackageFromFolder(${SRC})};
+
+import java.util.List;
+import java.util.Map;
+
+public interface Dao<T, ID extends java.io.Serializable> {
+
+	/**
+	 * Find entity by Primary Key
+	 * 
+	 * @param id
+	 * @return
+	 */
+	T load(final ID id);
+
+	/**
+	 * Load all entities
+	 * 
+	 * @param <T>
+	 * @param query
+	 * @return
+	 */
+	List<T> loadAll();
+
+	/**
+	 * Load a list of entities using a named query without parameter
+	 * 
+	 * @param queryName
+	 * @return
+	 */
+	List<T> loadByNamedQuery(final String queryName);
+
+	/**
+	 * Load a list of entities using a named query with parameters
+	 * 
+	 * @param queryName
+	 * @param queryParameters
+	 * @return
+	 */
+	List<T> loadByNamedQuery(final String queryName,
+			final Map<String, Object> queryParameters);
+
+	/**
+	 * Insert entity ( TRANSACTIONAL )
+	 * 
+	 * @param <T>
+	 * @return
+	 */
+	void insert(final T entity);
+
+	/**
+	 * Save the given entity ( TRANSACTIONAL )
+	 * 
+	 * @param <T>
+	 * @param entity
+	 * @return
+	 */
+	T save(final T entityToSave);
+
+	/**
+	 * Delete entity by primary key ( TRANSACTIONAL )
+	 * 
+	 * @param id
+	 */
+	boolean delete(final ID id);
+
+	/**
+	 * Search entities using the given query parameters <br>
+	 * Returns all the entities if no query parameter
+	 * 
+	 * @param queryParameters
+	 *            the query parameters to be used (can be null )
+	 * @return
+	 */
+	List<T> search(final Map<String, Object> queryParameters);
+	
+}

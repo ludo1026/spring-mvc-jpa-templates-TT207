@@ -1,0 +1,128 @@
+package ${target.javaPackageFromFolder(${TEST_SRC})};
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import ${ENTITY_PKG}.${beanClass.name};
+#if ( $beanClass.hasCompositePrimaryKey() )
+import ${ENTITY_PKG}.${beanClass.name}Id;
+#set( $keyType = "${beanClass.name}Id" )
+#set( $keyName = "id" )
+#set( $keyGetter = "getId" )
+#set( $keySetter = "setId" )
+#set( $keyInit = ${keyType}+" "+${keyName}+" = new "+${keyType}+"();" )
+#else
+#foreach( $field in $entity.keyAttributes )
+#set( $keyType = "$field.wrapperType" )
+#set( $keyName = "$field.formatedName(0)" )
+#set( $keyGetter = "$field.getter" )
+#set( $keySetter = "$field.setter" )
+#if( $keyType == "String" )
+	#set( $keyInit = ${keyType}+" "+${keyName}+" = ""test"";" )
+#elseif( $keyType == "Integer" || $keyType == "Long" || $keyType == "Double" || $keyType == "Short" || $keyType == "BigDecimal" || $keyType == "BigInteger" )
+	#set( $keyInit = ${keyType}+" "+${keyName}+" = "+${keyType}+".valueOf(""1"");" )
+#else
+	#set( $keyInit = ${keyType}+" "+${keyName}+" = new "+${keyType}+"();" )
+#end
+#end
+#end
+import ${ROOT_PKG}.dao.jpa.${beanClass.name}Dao;
+
+@RunWith(MockitoJUnitRunner.class)
+public class ${beanClass.name}ServiceImplUnitTest {
+	
+	@InjectMocks
+	private ${beanClass.name}ServiceImpl ${beanClass.name.toLowerCase()}Service;
+	@Mock
+	private ${beanClass.name}Dao ${beanClass.name.toLowerCase()}Dao;
+	
+	@Test
+	public void load() {
+		// Given
+		${keyInit}
+
+		${beanClass.name} ${beanClass.name.toLowerCase()} = new ${beanClass.name}();
+		${beanClass.name.toLowerCase()}.${keySetter}(${keyName});
+		
+		when(${beanClass.name.toLowerCase()}Dao.load(${keyName})).thenReturn(${beanClass.name.toLowerCase()});
+
+		// When
+		${beanClass.name} ${beanClass.name.toLowerCase()}Result = ${beanClass.name.toLowerCase()}Service.load(${keyName});
+		
+		// Then
+		assertEquals(${keyName}, ${beanClass.name.toLowerCase()}Result.${keyGetter}());
+	}
+	
+	@Test
+	public void save() {
+		// Given
+		${beanClass.name} ${beanClass.name.toLowerCase()}ToSave = new ${beanClass.name}();
+		${beanClass.name} ${beanClass.name.toLowerCase()}Saved = new ${beanClass.name}();
+		
+		when(${beanClass.name.toLowerCase()}Dao.save(${beanClass.name.toLowerCase()}ToSave)).thenReturn(${beanClass.name.toLowerCase()}Saved);
+
+		// When
+		${beanClass.name} ${beanClass.name.toLowerCase()}Result = ${beanClass.name.toLowerCase()}Service.save(${beanClass.name.toLowerCase()}ToSave);
+		
+		// Then
+		assertTrue(${beanClass.name.toLowerCase()}Result != ${beanClass.name.toLowerCase()}ToSave);
+		assertTrue(${beanClass.name.toLowerCase()}Result == ${beanClass.name.toLowerCase()}Saved);
+	}
+
+	@Test
+	public void delete() {
+		// Given
+		${keyInit}
+		
+		// When
+		${beanClass.name.toLowerCase()}Service.delete(${keyName});
+		
+		// Then
+		verify(${beanClass.name.toLowerCase()}Dao).delete(${keyName});
+	}
+
+	@Test
+	public void search() {
+		// Given
+		Map<String,Object> criteria = new HashMap<String,Object>();
+		
+		List<${beanClass.name}> ${beanClass.name.toLowerCase()}s = new ArrayList<${beanClass.name}>();
+		${beanClass.name.toLowerCase()}s.add(new ${beanClass.name}());
+		
+		when(${beanClass.name.toLowerCase()}Dao.search(criteria)).thenReturn(${beanClass.name.toLowerCase()}s);
+		
+		// When
+		List<${beanClass.name}> ${beanClass.name.toLowerCase()}sResult = ${beanClass.name.toLowerCase()}Service.search(criteria);
+		
+		// Then
+		assertTrue(${beanClass.name.toLowerCase()}sResult == ${beanClass.name.toLowerCase()}s);
+	}
+
+	@Test
+	public void loadAll() {
+		// Given
+		List<${beanClass.name}> ${beanClass.name.toLowerCase()}s = new ArrayList<${beanClass.name}>();
+		${beanClass.name.toLowerCase()}s.add(new ${beanClass.name}());
+		
+		when(${beanClass.name.toLowerCase()}Dao.loadAll()).thenReturn(${beanClass.name.toLowerCase()}s);
+		
+		// When
+		List<${beanClass.name}> ${beanClass.name.toLowerCase()}sResult = ${beanClass.name.toLowerCase()}Service.loadAll();
+		
+		// Then
+		assertTrue(${beanClass.name.toLowerCase()}sResult == ${beanClass.name.toLowerCase()}s);
+	}
+	
+}

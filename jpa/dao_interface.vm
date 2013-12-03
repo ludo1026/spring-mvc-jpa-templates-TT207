@@ -1,0 +1,19 @@
+package ${target.javaPackageFromFolder(${SRC})};
+
+import ${ENTITY_PKG}.${beanClass.name};
+#if ( $beanClass.hasCompositePrimaryKey() )
+import ${ENTITY_PKG}.${beanClass.name}Id;
+#set( $keyType = "${beanClass.name}Id" )
+#else
+#foreach( $field in $entity.keyAttributes )
+#set( $keyType = "$field.wrapperType" )
+#end
+#end
+import ${target.javaPackageFromFolder(${SRC})}.base.Dao;
+
+/**
+ * DAO : ${beanClass.name}.
+ */
+public interface ${beanClass.name}Dao extends Dao<${beanClass.name}, $keyType> {
+
+}
