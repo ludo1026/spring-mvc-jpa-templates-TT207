@@ -30,4 +30,4 @@ Database Access Objects layer:
 Tutorial
 ---
 
-- [HOWTO](docs/HOWTO.md)
+- [HOWTO](doc/HOWTO.md)
