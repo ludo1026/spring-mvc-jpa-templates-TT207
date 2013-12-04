@@ -85,7 +85,7 @@ or MySQL :
 - You should have a successfull message
 - Wait for Maven which downloads all dependencies
 - The project source code should compile successfully
-- The "pom.xml" has been overrided during generation: fill "artifactId" in "pom.xml" with the name of your project
+- The "pom.xml" has been overrided during generation: fill "artifactId" and "name" in "pom.xml" with the name of your project
 
 5. Database connection in the source files
 ---
@@ -123,7 +123,7 @@ or MySQL :
 - Click on the "Generate" button
 - You should have a successfull message
 - The project source code should compile successfully
-- The "pom.xml" has been overrided during generation: fill "artifactId" in "pom.xml" with the name of your project
+- The "pom.xml" has been overrided during generation: fill "artifactId" and "name" in "pom.xml" with the name of your project
 - Open the "src/main/ressources/META-INF/config/database.properties" file to edit database connection for JPA/Hibernate
 - Publish and Start the server
 - In the web navigator, tap welcome page url "http://localhost:8080/[application]", with "[application]" : the name of your webapp in eclipse
