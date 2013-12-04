@@ -525,7 +525,11 @@ function setDocumentScrollTop(ypos)
  <li>You should have a successfull message</li> 
  <li>Wait for Maven which downloads all dependencies</li> 
  <li>The project source code should compile successfully</li> 
- <li><p>The &quot;pom.xml&quot; has been overrided during generation: fill &quot;artifactId&quot; and &quot;name&quot; in &quot;pom.xml&quot; with the name of your project</p></li> 
+ <li> <p>The &quot;pom.xml&quot; has been overrided during generation: </p> 
+  <ul> 
+   <li>fill &quot;artifactId&quot; and &quot;name&quot; in &quot;pom.xml&quot; with the name of your project</li> 
+   <li>add the database JDBC driver as dependency in the &quot;pom.xml&quot;</li> 
+  </ul> </li> 
 </ul>
 <h2> <a name="5-database-connection-in-the-source-files" class="anchor" href="..md.html#5-database-connection-in-the-source-files"><span class="octicon octicon-link"></span></a>5. Database connection in the source files</h2> 
 <ul> 
@@ -559,7 +563,11 @@ function setDocumentScrollTop(ypos)
  <li>Click on the &quot;Generate&quot; button</li> 
  <li>You should have a successfull message</li> 
  <li>The project source code should compile successfully</li> 
- <li>The &quot;pom.xml&quot; has been overrided during generation: fill &quot;artifactId&quot; and &quot;name&quot; in &quot;pom.xml&quot; with the name of your project</li> 
+ <li>The &quot;pom.xml&quot; has been overrided during generation: 
+  <ul> 
+   <li>fill &quot;artifactId&quot; and &quot;name&quot; in &quot;pom.xml&quot; with the name of your project</li> 
+   <li>add the database JDBC driver as dependency in the &quot;pom.xml&quot;</li> 
+  </ul> </li> 
  <li>Open the &quot;src/main/ressources/META-INF/config/database.properties&quot; file to edit database connection for JPA/Hibernate</li> 
  <li>Publish and Start the server</li> 
  <li>In the web navigator, tap welcome page url &quot;http://localhost:8080/[application]&quot;, with &quot;[application]&quot; : the name of your webapp in eclipse</li> 
