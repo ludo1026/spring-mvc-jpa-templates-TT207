@@ -85,12 +85,15 @@ or MySQL :
 - You should have a successfull message
 - Wait for Maven which downloads all dependencies
 - The project source code should compile successfully
+- In the "pom.xml" file, replace "groupId", "artifactId" which must correspond to your project
 
 5. Database connection in the source files
 ---
 
 - Open the "src/main/ressources/META-INF/config/database.properties" to configure the database connection
 - Edit this file to enable the connection to your database from JPA/Hibernate
+
+=> [Dialect list](http://www.javabeat.net/list-of-hibernate-sql-dialects/#)
 
 6. Start the application
 ---
