@@ -97,7 +97,7 @@ or MySQL :
 - Start the server
 - You should not have error message in the console view
 - Open a Web navigator and tap this url : "http://localhost:8080/[application]", with "[application]" : the name of your webapp in eclipse
-- The welcome page is now displayed in the web navigator with link for only one entity in this page
+- The welcome page is now displayed in the web navigator and contains a link to manage only one entity
 - Click on this link and next create a new entity
 - Continue to create, modify, delete this entity in order to test the application
 - Stop the server
