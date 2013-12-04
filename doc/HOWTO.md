@@ -72,7 +72,14 @@ or MySQL :
 - Click on "Meta-data" tab and click on "Get tables" to see the tables of your database
 - If all is OK, click on "Generate repository" button to generate a new ".dbrep" file in the "TelosysTools/repos" directory 
 
-4. Generate source code
+4. Add dependencies to pom.xml
+---
+
+- Open the file : [TelosysTools/templates/spring-mvc-jpa/pom-dependencies.txt](../pom-dependencies.txt)
+- Copy its content in the "pom.xml" at the root of your project
+- Add the dependency of the JDBC driver of your database
+
+5. Generate source code
 ---
 
 - Open the ".dbrep" file in the "TelosysTools/repos" directory
@@ -86,9 +93,6 @@ or MySQL :
 - You should have a successfull message
 - Wait for Maven which downloads all dependencies
 - The project source code should compile successfully
-- The "pom.xml" has been overrided during generation: 
- - fill "artifactId" and "name" in "pom.xml" with the name of your project
- - add the database JDBC driver as dependency in the "pom.xml"
 
 5. Database connection in the source files
 ---
@@ -115,21 +119,7 @@ or MySQL :
 ---
 
 - After testing the application for one entity, you can generate source code for all entities that you want to manage by this application
-- For that, open the ".dbrep" file in the "TelosysTools/repos" directory
-- Click on the "Links between entities" tab
-- Click on "Generate links from foreign keys" button which is located at bottom of the tab
-- You can see now the links between all entities
-- Click on the "Bulk generation" tab
-- In the entities list, select all entities
-- Select the "spring-mvc-jpa" templates bundle in the dropdown list => all templates are now visible in right list
-- Select all templates and select "copy static resources"
-- Click on the "Generate" button
-- You should have a successfull message
-- The project source code should compile successfully
-- The "pom.xml" has been overrided during generation: 
- - fill "artifactId" and "name" in "pom.xml" with the name of your project
- - add the database JDBC driver as dependency in the "pom.xml"
-- Open the "src/main/ressources/META-INF/config/database.properties" file to edit database connection for JPA/Hibernate
+- For that, follow steps 5 and 6
 - Publish and Start the server
 - In the web navigator, tap welcome page url "http://localhost:8080/[application]", with "[application]" : the name of your webapp in eclipse
 - The welcome page is now displayed in the web navigator with a link for each entities
@@ -141,5 +131,3 @@ or MySQL :
 
 - Delete the "TelosysTools" directory of your project
 - Delete the "telosys-tools.cfg" file at the root of your project
-- You have finished
-
