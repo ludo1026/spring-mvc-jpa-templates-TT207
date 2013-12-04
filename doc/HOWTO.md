@@ -75,18 +75,21 @@ or MySQL :
 ---
 
 - Open the ".dbrep" file in the "TelosysTools/repos" directory
+- Click on "Generate links from foreign keys" button which is located at bottom of the tab
+- You can see now the links between all entities
 - Click on the "Bulk generation" tab
 - In the entities list, select an entity which must correspond to a table with no foreign key
 - Select the "spring-mvc-jpa" templates bundle in the dropdown list => all templates are now visible in right list
 - Select all templates and select "copy static resources"
 - Click on the "Generate" button
 - You should have a successfull message
+- Wait for Maven which downloads all dependencies
 - The project source code should compile successfully
 
 5. Database connection in the source files
 ---
 
-- Open the "src/main/ressources/database.properties" to configure the database connection
+- Open the "src/main/ressources/META-INF/spring/database.properties" to configure the database connection
 - Edit this file to enable the connection to your database from JPA/Hibernate
 
 6. Start the application

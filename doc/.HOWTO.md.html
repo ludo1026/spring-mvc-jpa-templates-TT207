@@ -515,17 +515,20 @@ function setDocumentScrollTop(ypos)
 <h2> <a name="4-generate-source-code" class="anchor" href="..md.html#4-generate-source-code"><span class="octicon octicon-link"></span></a>4. Generate source code</h2> 
 <ul> 
  <li>Open the &quot;.dbrep&quot; file in the &quot;TelosysTools/repos&quot; directory</li> 
+ <li>Click on &quot;Generate links from foreign keys&quot; button which is located at bottom of the tab</li> 
+ <li>You can see now the links between all entities</li> 
  <li>Click on the &quot;Bulk generation&quot; tab</li> 
  <li>In the entities list, select an entity which must correspond to a table with no foreign key</li> 
  <li>Select the &quot;spring-mvc-jpa&quot; templates bundle in the dropdown list =&gt; all templates are now visible in right list</li> 
  <li>Select all templates and select &quot;copy static resources&quot;</li> 
  <li>Click on the &quot;Generate&quot; button</li> 
  <li>You should have a successfull message</li> 
+ <li>Wait for Maven which downloads all dependencies</li> 
  <li><p>The project source code should compile successfully</p></li> 
 </ul>
 <h2> <a name="5-database-connection-in-the-source-files" class="anchor" href="..md.html#5-database-connection-in-the-source-files"><span class="octicon octicon-link"></span></a>5. Database connection in the source files</h2> 
 <ul> 
- <li>Open the &quot;src/main/ressources/database.properties&quot; to configure the database connection</li> 
+ <li>Open the &quot;src/main/ressources/META-INF/spring/database.properties&quot; to configure the database connection</li> 
  <li><p>Edit this file to enable the connection to your database from JPA/Hibernate</p></li> 
 </ul>
 <h2> <a name="6-start-the-application" class="anchor" href="..md.html#6-start-the-application"><span class="octicon octicon-link"></span></a>6. Start the application</h2> 
