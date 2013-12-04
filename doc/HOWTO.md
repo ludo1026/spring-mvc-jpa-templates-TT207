@@ -89,7 +89,7 @@ or MySQL :
 5. Database connection in the source files
 ---
 
-- Open the "src/main/ressources/META-INF/spring/database.properties" to configure the database connection
+- Open the "src/main/ressources/META-INF/config/database.properties" to configure the database connection
 - Edit this file to enable the connection to your database from JPA/Hibernate
 
 6. Start the application
@@ -120,7 +120,7 @@ or MySQL :
 - Click on the "Generate" button
 - You should have a successfull message
 - The project source code should compile successfully
-- Open the "src/main/ressources/database.properties" file to edit database connection for JPA/Hibernate
+- Open the "src/main/ressources/META-INF/config/database.properties" file to edit database connection for JPA/Hibernate
 - Publish and Start the server
 - In the web navigator, tap welcome page url "http://localhost:8080/[application]", with "[application]" : the name of your webapp in eclipse
 - The welcome page is now displayed in the web navigator with a link for each entities
