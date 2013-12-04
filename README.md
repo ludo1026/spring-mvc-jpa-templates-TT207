@@ -18,7 +18,7 @@ The application manages each entity with CRUD (Create, Read, Update, Delete) ope
 Architecture
 ---
 
-![Diagram](doc/image/layers2.png)
+![Diagram](doc/image/layers.png)
 
 Presentation layer: 
 - Spring MVC, JSPX Pages, Jquery, Bootstrap
