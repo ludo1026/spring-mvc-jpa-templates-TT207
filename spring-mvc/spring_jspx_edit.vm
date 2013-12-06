@@ -1,4 +1,11 @@
 #set( $_ = "$" )
+##--------------------------------------------------------------------------------------------------------
+## Data fields = fields not in Primary Key and not in selected Links    
+#set( $dataFields = $entity.getAttributesByCriteria( $const.NOT_IN_SELECTED_LINKS ) )
+##--------------------------------------------------------------------------------------------------------
+## Link fields = fields not in Primary Key and used as FK in selected Links    
+#set( $linkFields = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.IN_SELECTED_LINKS ) )
+##--------------------------------------------------------------------------------------------------------
 #set( $deletecall = "" )
 #set( $deleteparameters = "" )
 #set( $urlparameters = "" )
@@ -46,18 +53,19 @@
 <jsp:directive.page contentType="text/html;charset=UTF-8"/>
 <jsp:output omit-xml-declaration="yes"/>
 
-	<fieldset class="col-sm-12 bordure">
-		<legend class="legende"><s:message code="${beanClass.name.toLowerCase()}"/></legend>
+	<div class="container">
+		<fieldset class="col-sm-12 bordure">
+			<legend class="legende"><s:message code="${beanClass.name.toLowerCase()}"/></legend>
 		
-		<c:if test="${_}{not empty message}">
-			<div id="message" class="${_}{message.type}">${_}{message.message}</div>
-		</c:if>
+			<c:if test="${_}{not empty message}">
+				<div id="message" class="alert alert-${_}{message.type.css}"><s:message code="${_}{message.message}"/></div>
+			</c:if>
 
-	    <div class="container">
+	    
 	    	<s:url value="/${beanClass.name.toLowerCase()}" var="url_form_submit" />
 			<form:form modelAttribute="${beanClass.name.toLowerCase()}" cssClass="well" method="PUT" action="${_}{url_form_submit}">
 				<table>
-#foreach( $field in $beanClass.attributes )
+#foreach( $field in $dataFields )
 					<tr>
 						<th align="left"><s:message code="${beanClass.name.toLowerCase()}.${field.formatedName(0)}"/></th>
 #if( $field.isKeyElement() && $beanClass.hasCompositePrimaryKey() )
@@ -83,6 +91,14 @@
 						</td>
 					</tr>
 #end
+#foreach( $link in $entity.selectedLinks )
+#if( !$link.isCardinalityManyToMany() && !$link.isCardinalityOneToMany() )
+					<tr>
+						<th align="left"><s:message code="${beanClass.name.toLowerCase()}.${link.formatedName(0)}"/></th>
+						<td><form:select class="form-control" id="_${link.formatedName(0)}_id" items="${_}{${link.targetEntity.toLowerCase()}s}" path="${link.formatedName(0)}"/></td>
+					</tr>
+#end
+#end
 					<tr>
 						<td colspan="2">
 							<form:errors/>
@@ -100,6 +116,6 @@
 					</tr>
 				</table>
 			</form:form>
-		</div>	
-    </fieldset>
+	    </fieldset>
+	</div>	
 </div>

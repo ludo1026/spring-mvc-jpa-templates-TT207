@@ -1,0 +1,33 @@
+package ${ROOT_PKG}.web.bean;
+
+public class Message {
+	
+	private TypeMessage type;
+	
+	private String message;
+
+	public Message() {
+	}
+	
+	public Message(TypeMessage type, String message) {
+		this.type = type;
+		this.message = message;
+	}
+	
+	public TypeMessage getType() {
+		return type;
+	}
+
+	public void setType(TypeMessage type) {
+		this.type = type;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
+}

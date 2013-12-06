@@ -1,4 +1,11 @@
 #set( $_ = "$" )
+##--------------------------------------------------------------------------------------------------------
+## Data fields = fields not in Primary Key and not in selected Links    
+#set( $dataFields = $entity.getAttributesByCriteria( $const.NOT_IN_SELECTED_LINKS ) )
+##--------------------------------------------------------------------------------------------------------
+## Link fields = fields not in Primary Key and used as FK in selected Links    
+#set( $linkFields = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.IN_SELECTED_LINKS ) )
+##--------------------------------------------------------------------------------------------------------
 ## Clé primaire
 #if ( $beanClass.hasCompositePrimaryKey() )
 #set( $keyType = "${beanClass.name}Id" )
@@ -18,16 +25,28 @@
 <div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:joda="http://www.joda.org/joda/time/tags" xmlns:s="http://www.springframework.org/tags" xmlns:form="http://www.springframework.org/tags/form" version="2.0">
 <jsp:directive.page contentType="text/html;charset=UTF-8"/>
 <jsp:output omit-xml-declaration="yes"/>
-		<div class="container">
+	<div class="container">
+		<fieldset class="col-sm-12 bordure">
+			<legend class="legende"><s:message code="${beanClass.name.toLowerCase()}"/></legend>
+		
+			<c:if test="${_}{not empty message}">
+				<div id="message" class="alert alert-${_}{message.type.css}"><s:message code="${_}{message.message}"/></div>
+			</c:if>
+
 			<table class="table table-striped">
 				<thead>
 					<tr>
-#foreach( $field in $beanClass.attributes )
+#foreach( $field in $dataFields )
 #set( $fieldName = "current.${field.name}" )
 #if( $field.isKeyElement() && $beanClass.hasCompositePrimaryKey() )
 #set( $fieldName = "current.key.${field.formatedName(0)}" )
 #end
 						<th><s:message code="${beanClass.name.toLowerCase()}.${field.formatedName(0)}"/></th>
+#end
+#foreach( $link in $entity.selectedLinks )
+#if( !$link.isCardinalityManyToMany() && !$link.isCardinalityOneToMany() )
+						<th><s:message code="${beanClass.name.toLowerCase()}.${link.formatedName(0)}"/></th>
+#end
 #end
 						<s:url value="/${beanClass.name.toLowerCase()}/create" var="url_create" />
 						<th><a class="btn btn-info" href='${_}{url_create}'><s:message code="create"/></a></th>
@@ -36,14 +55,20 @@
 				<tbody>
 					<c:forEach items="${_}{list${beanClass.name}s}" var="${beanClass.name.toLowerCase()}">
 						<tr>
-#foreach( $field in $beanClass.attributes )
+#foreach( $field in $dataFields )
 #if( $field.isKeyElement() && $beanClass.hasCompositePrimaryKey() )
 							<td>${_}{${beanClass.name.toLowerCase()}.${keyName}.${field.formatedName(0)}}</td>
 #else
 							<td>${_}{${beanClass.name.toLowerCase()}.${field.formatedName(0)}}</td>
 #end
 #end
-## Clé primaire URL
+## Lien vers les entités
+#foreach( $link in $entity.selectedLinks )
+#if( !$link.isCardinalityManyToMany() && !$link.isCardinalityOneToMany() )
+							<td>${_}{${beanClass.name.toLowerCase()}.${link.formatedName(0)}}</td>
+#end
+#end
+## URL
 #set( $keyURLPath = "")
 #foreach( $field in $entity.keyAttributes )
 #if( $field.isKeyElement() && $beanClass.hasCompositePrimaryKey() )
@@ -58,5 +83,6 @@
 					</c:forEach>
 				</tbody>
 			</table>
-		</div>
+		</fieldset>
+	</div>
 </div>

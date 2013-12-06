@@ -11,6 +11,7 @@ create=Cr\u00e9er
 edit=Modifier
 delete=Supprimer
 save=Enregistrer
+save.ok=Enregistrement effectu\u00e9
 list=Liste
 reset=R\u00e9initialiser
 
@@ -21,7 +22,11 @@ ${entity.name.toLowerCase()}.list=${entity.name.toLowerCase()}s
 #foreach( $field in ${entity.attributes} )
 ${entity.name.toLowerCase()}.${field.formatedName(0)}=${field.label}
 #end
-
+#foreach( $field in $entity.selectedLinks )
+#if( !$field.isCardinalityManyToMany() && !$field.isCardinalityOneToMany() )
+${entity.name.toLowerCase()}.${field.formatedName(0)}=${field.type}
+#end
+#end
 #end
 
 #exception

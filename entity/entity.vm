@@ -97,7 +97,7 @@ $field.beanValidationAnnotationsJSR303(4)
 ##-- ENTITY LINKS ( RELATIONSHIP )
 ## #foreach( $link in $entity.links )
 #foreach( $link in $entity.selectedLinks )
-#if( !$link.isCardinalityManyToMany() && !$link.isCardinalityOneToMany() ) 
+#if( !$link.isCardinalityManyToMany() && !$link.isCardinalityOneToMany() )
 $link.jpaAnnotations(4)
     private $link.formatedType(0) $link.formatedName(0);
 

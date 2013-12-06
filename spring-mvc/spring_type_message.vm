@@ -1,0 +1,14 @@
+package ${ROOT_PKG}.web.bean;
+
+public enum TypeMessage {
+	
+	SUCCESS,
+	INFO,
+	WARNING,
+	DANGER;
+	
+	public String getCss() {
+		return name().toLowerCase();
+	}
+	
+}

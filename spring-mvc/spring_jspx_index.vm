@@ -1,15 +1,14 @@
 #set( $_ = "$" )
 <div xmlns:spring="http://www.springframework.org/tags" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
-  <jsp:directive.page contentType="text/html;charset=UTF-8" />
-  <jsp:output omit-xml-declaration="yes" />
-  <spring:message var="app_name" code="application_name" htmlEscape="false" />
-  <spring:message var="title" code="welcome_titlepane" arguments="${_}{app_name}" htmlEscape="false" />
-  <div>
-    <h3>
-      <spring:message code="welcome_h3" arguments="${_}{app_name}" />
-    </h3>
-
+<jsp:directive.page contentType="text/html;charset=UTF-8" />
+<jsp:output omit-xml-declaration="yes" />
+	<spring:message var="app_name" code="application_name" htmlEscape="false" />
+	<spring:message var="title" code="welcome_titlepane" arguments="${_}{app_name}" htmlEscape="false" />
+    
     <div class="container">
+		<h3>
+			<spring:message code="welcome_h3" arguments="${_}{app_name}" />
+		</h3>
       
 		<ul>
 #foreach( $entity in $selectedEntities )
@@ -18,5 +17,4 @@
 	    </ul>
 
     </div> <!-- /container -->
-  </div>
 </div>
