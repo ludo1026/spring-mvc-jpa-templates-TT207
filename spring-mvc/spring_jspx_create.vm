@@ -1,0 +1,135 @@
+#set( $tools = $loader.newInstance("Tools") )
+#set( $_= "$" )
+##--------------------------------------------------------------------------------------------------------
+## Key fields = fields in Primary Key    
+#set( $keyFields = $entity.getAttributesByCriteria( $const.KEY ) )
+##--------------------------------------------------------------------------------------------------------
+## Data fields = fields not in Primary Key and not in selected Links    
+#set( $dataFields = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.NOT_IN_SELECTED_LINKS ) )
+##--------------------------------------------------------------------------------------------------------
+## Link fields = fields not in Primary Key and used as FK in selected Links    
+#set( $fieldLinks = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.IN_SELECTED_LINKS ) )
+##--------------------------------------------------------------------------------------------------------
+## Mapped fields = fields in Primary Key or not in selected Links    
+#set( $allMappedFields = $fn.concatLists($entity.keyAttributes, $dataFields) )
+##--------------------------------------------------------------------------------------------------------
+## Informations sur la clé primaire d'une entité
+##--------------------------------------------------------------------------------------------------------
+#macro( defineKeyInfoForEntity, $entity )
+#if ( $entity.hasCompositePrimaryKey() )
+#set( $keyType = "${entity.name}Id" )
+#set( $keyName = "id" )
+#set( $keySetter = "setId" )
+#set( $keyGetter = "getId" )
+#else
+#set( $keyField = $entity.keyAttributes[0] )
+#set( $keyType = "$keyField.formatedType(0)" )
+#set( $keyName = "$keyField.formatedName(0)" )
+#set( $keySetter = $keyField.setter )
+#set( $keyGetter = $keyField.getter )
+#end
+#end
+##--------------------------------------------------------------------------------------------------------
+#defineKeyInfoForEntity( $entity )
+##--------------------------------------------------------------------------------------------------------
+## keyURLPath : PRIMARY KEY IN URL
+##--------------------------------------------------------------------------------------------------------
+#set( $keyURLPath = "")
+#if ( $entity.hasCompositePrimaryKey() )
+#foreach( $field in $entity.keyAttributes )
+#set( $keyURLPath = $keyURLPath+"/${"+${entity.name.toLowerCase()}+"."+${field.formatedName(0)}+"}" )
+#end
+#else
+#set( $keyURLPath = $keyURLPath+"/${"+${entity.name.toLowerCase()}+"."+${keyName}+"}" )
+#end
+##--------------------------------------------------------------------------------------------------------
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:joda="http://www.joda.org/joda/time/tags" xmlns:s="http://www.springframework.org/tags" xmlns:form="http://www.springframework.org/tags/form" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" xmlns:input="urn:jsptagdir:/WEB-INF/tags/input" version="2.0">
+<jsp:directive.page contentType="text/html;charset=UTF-8"/>
+<jsp:output omit-xml-declaration="yes"/>
+
+	<div class="container">
+		<fieldset class="col-sm-12 bordure">
+			<legend class="legende"><s:message code="${entity.name.toLowerCase()}"/></legend>
+		
+			<util:message message="${_}{message}" messages="${_}{messages}" />
+			
+	    	<s:url value="/${entity.name.toLowerCase()}" var="url_form_submit" />
+			<form:form class="form-horizontal" modelAttribute="${entity.name.toLowerCase()}" cssClass="well form-horizontal" method="POST" action="${_}{url_form_submit}">
+				<form:errors path="*" cssClass="alert alert-danger" element="div" />
+## KEY
+#foreach( $field in $keyFields )
+#if( ! $field.isUsedInLinkJoinColumn($entity.links) )
+#if( ! $tools.isGeneratedValue( $entity, $field ) )
+				<div class="form-group">
+					<label for="${field.formatedName(0)}" class="col-sm-2 control-label"><s:message code="${entity.name.toLowerCase()}.${field.formatedName(0)}"/></label>
+					<div class="col-sm-10">
+						<form:input path="${field.name}" class="form-control" />
+						<form:errors cssClass="label label-danger" id="_${field.formatedName(0)}_error_id" path="${field.formatedName(0)}" />
+					</div>
+				</div>
+#end
+#end
+#end
+## FIELDS
+#foreach( $field in $dataFields )
+				<div class="form-group">
+#if( $field.formatedType(0) == "Boolean" )
+					<div class="col-sm-offset-2 col-sm-10">
+						<input:checkbox name="${field.name}" id="${entity.name.toLowerCase()}_${field.formatedName(0)}" label="${entity.name.toLowerCase()}.${field.formatedName(0)}" />
+#else
+					<label for="${entity.name.toLowerCase()}_${field.formatedName(0)}" class="col-sm-2 control-label"><s:message code="${entity.name.toLowerCase()}.${field.formatedName(0)}"/></label>
+					<div class="col-sm-10">
+#if( $field.formatedType(0) == "Date" ||  $field.formatedType(0) == "Calendar" )
+						<input:date name="${field.formatedName(0)}" id="${entity.name.toLowerCase()}_${field.formatedName(0)}" />
+#elseif( $field.isLongText() )
+						<input:textarea name="${field.formatedName(0)}" id="${entity.name.toLowerCase()}_${field.formatedName(0)}" />
+#else
+						<input:text name="${field.formatedName(0)}" id="${entity.name.toLowerCase()}_${field.formatedName(0)}" maxLength="${field.databaseSize}" />
+#end
+#end
+						<input:errors name="${field.formatedName(0)}" id="${entity.name.toLowerCase()}_${field.formatedName(0)}_errors" />
+					</div>
+				</div>
+#end
+## LINKS
+#foreach( $link in $entity.links )
+#if ( $link.isCardinalityOneToOne() || $link.isCardinalityManyToOne() )
+#set( $linkEntity = $model.getEntityByClassName($link.targetEntityType) )
+#if ( $linkEntity.hasCompositePrimaryKey() )
+#set( $linkKeyType = "${entity.name}Key" )
+#set( $linkKeyName = "id" )
+#else
+#set( $linkKeyField = $linkEntity.keyAttributes[0] )
+#set( $linkKeyType = "$linkKeyField.formatedType(0)" )
+#set( $linkKeyName = "$linkKeyField.formatedName(0)" )
+#end
+				<div class="form-group">
+					<label for="${link.formatedName(0)}_${linkKeyName}" class="col-sm-2 control-label"><s:message code="${entity.name.toLowerCase()}.${link.formatedName(0)}"/></label>
+					<div class="col-sm-10">
+						<input:selectEntity 
+							id="${link.formatedName(0)}_${linkKeyName}" 
+							name="${link.formatedName(0)}"
+							entities="${_}{${link.targetEntityType.toLowerCase()}s}"
+							entityId="${linkKeyName}"
+							entitySelected="${_}{${entity.name.toLowerCase()}.${link.formatedName(0)}}"
+							cssClass="form-control" 
+						/>
+						<input:errors name="${link.formatedName(0)}" id="${entity.name.toLowerCase()}_${link.formatedName(0)}_errors" />
+					</div>
+				</div>
+#end
+#end
+				<div class="form-group">
+					<div class="col-sm-offset-8 col-sm-2">
+		 				<s:url var="all${entity.name}Url" value="/${entity.name.toLowerCase()}"/>
+						<a role="button" class="btn btn-default btn-block" href="${_}{all${entity.name}Url}"><s:message code="cancel"/></a>
+					</div>
+    				<div class="col-sm-2">
+						<button type="submit" class="btn btn-primary btn-lg btn-block"><s:message code="save"/></button>
+					</div>
+				</div>
+			</form:form>
+	    </fieldset>
+	</div>	
+</div>

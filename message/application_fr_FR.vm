@@ -1,1 +1,4 @@
 application_name=Application
+
+# format patterns
+date_format_pattern=dd/MM/yyyy

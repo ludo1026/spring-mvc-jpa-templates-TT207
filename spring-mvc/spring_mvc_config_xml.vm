@@ -14,12 +14,13 @@
 	<!-- <annotation-driven /> enables the support of annotation configuration for Spring MVC controllers, -->
 	<!-- as well as enabling Spring 3 type conversion and formatting support. -->
 	<!-- Also, support for JSR-303 Bean Validation is enabled by this tag. -->
-	<mvc:annotation-driven />
+    <mvc:annotation-driven conversion-service="applicationConversionService"/>
+    <bean id="applicationConversionService" class="${ROOT_PKG}.web.ApplicationConversionServiceFactoryBean"/>
 
 	<!-- static resources -->
-<!-- 	<mvc:resources mapping="/css/**" location="/css/" /> -->
-<!-- 	<mvc:resources mapping="/img/**" location="/img/" /> -->
-<!-- 	<mvc:resources mapping="/script/**" location="/script/" /> -->
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/img/**" location="/img/" />
+	<mvc:resources mapping="/script/**" location="/script/" />
 
 	<!-- uncomment these lines in order to disable tiles -->
 <!-- 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"> -->

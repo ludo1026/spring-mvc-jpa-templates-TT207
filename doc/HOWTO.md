@@ -86,6 +86,10 @@ or MySQL :
 - Click on "Generate links from foreign keys" button which is located at bottom of the tab
 - You can see now the links between all entities
 - Click on the "Bulk generation" tab
+- The "Bulk generation" tab contains two list : on the left, the list of entities; on the right, the list of templates.
+- In the dropdown list, select the templates group "spring-mvc-jpa" which will be used for the generation
+- Select "Copy static resources" and click on Generate => Configuration and static files are copied in the project. You can refuse each files overwrites.
+- Deselect "Copy static resources"
 - In the entities list, select an entity which must correspond to a table with no foreign key
 - Select the "spring-mvc-jpa" templates bundle in the dropdown list => all templates are now visible in right list
 - Select all templates and select "copy static resources"

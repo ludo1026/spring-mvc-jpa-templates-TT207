@@ -1,0 +1,31 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:s="http://www.springframework.org/tags" xmlns:form="http://www.springframework.org/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+	<jsp:output omit-xml-declaration="yes" />
+
+	<jsp:directive.attribute name="id" type="java.lang.String" required="true" rtexprvalue="true" description="id" />
+	<jsp:directive.attribute name="name" type="java.lang.String" required="true" rtexprvalue="true" description="path attribute" />
+	<jsp:directive.attribute name="maxLength" type="java.lang.Integer" required="false" rtexprvalue="true" description="max length" />
+	<jsp:directive.attribute name="size" type="java.lang.Integer" required="false" rtexprvalue="true" description="input size" />
+	<jsp:directive.attribute name="cssClass" type="java.lang.String" required="false" rtexprvalue="true" description="css class" />
+	
+	<!-- default values -->
+	
+	<c:if test="${empty cssClass}">
+		<c:set var="cssClass" value="form-control" />
+	</c:if>
+	
+	<c:if test="${empty size}">
+		<c:choose>
+			<c:when test="${not empty maxLength and maxLength lt 100}">
+				<c:set var="size" value="${maxLength}" />
+			</c:when>
+			<c:otherwise>
+				<c:set var="size" value="100" />
+			</c:otherwise>
+		</c:choose>
+	</c:if>
+	
+	<!-- content -->
+	
+	<form:input id="${id}" path="${name}" class="${cssClass}" size="${size}" maxLength="${maxLength}"/>
+	
+</jsp:root>

@@ -1,0 +1,113 @@
+package org.telosys.starterkits.web;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.format.support.FormattingConversionServiceFactoryBean;
+import org.springframework.stereotype.Component;
+import org.telosys.starterkits.bean.Author;
+import org.telosys.starterkits.bean.Publisher;
+import org.telosys.starterkits.service.AuthorService;
+import org.telosys.starterkits.service.PublisherService;
+#foreach( $entity in $selectedEntities )
+import ${ENTITY_PKG}.${entity.name};
+#if ( $entity.hasCompositePrimaryKey() )
+import ${ENTITY_PKG}.${entity.name}Id;
+#end
+#end
+#foreach( $entity in $selectedEntities )
+import ${ROOT_PKG}.service.${entity.name}Service;
+#end
+
+@Component
+public class ApplicationConversionServiceFactoryBean extends FormattingConversionServiceFactoryBean {
+	
+	public void afterPropertiesSet() {
+        super.afterPropertiesSet();
+        installTypeConverters(getObject());
+        installLabelConverters(getObject());
+    }
+	
+	protected void installTypeConverters(FormatterRegistry registry) {
+		registry.addConverter(getStringToStringConverter());
+	}
+    
+	public Converter<String, String> getStringToStringConverter() {
+        return new Converter<String, String>() {
+ 
+            @Override
+            public String convert(String source) {
+                return StringUtils.trimToNull(source);
+            }
+        };
+    }
+	
+    public void installLabelConverters(FormatterRegistry registry) {
+#foreach( $entity in $selectedEntities )
+#if ( $entity.hasCompositePrimaryKey() )
+#set( $keyType = "${entity.name}Id" )
+#else
+#foreach( $field in $entity.keyAttributes )
+#set( $keyType = "$field.formatedType(0)" )
+#end
+#end
+		// ${entity.name}
+        registry.addConverter(get${entity.name}ToStringConverter());
+        registry.addConverter(getIdTo${entity.name}Converter());
+#if( $keyType != "String" )
+        registry.addConverter(getStringTo${entity.name}Converter());
+#end
+#end
+    }
+    
+#foreach( $entity in $selectedEntities )
+#if ( $entity.hasCompositePrimaryKey() )
+#set( $keyType = "${entity.name}Id" )
+#set( $keyName = "id" )
+#set( $keySetter = "setId" )
+#set( $keyGetter = "getId" )
+#else
+#foreach( $field in $entity.keyAttributes )
+#set( $keyType = "$field.formatedType(0)" )
+#set( $keyName = "$field.formatedName(0)" )
+#set( $keySetter = $field.setter )
+#set( $keyGetter = $field.getter )
+#end
+#end
+	@Resource
+	private ${entity.name}Service ${entity.name.toLowerCase()}Service;
+
+    public Converter<${entity.name}, String> get${entity.name}ToStringConverter() {
+        return new Converter<${entity.name}, java.lang.String>() {
+            public String convert(${entity.name} ${entity.name}) {
+				return new StringBuilder().append(${entity.name}).toString();
+            }
+        };
+    }
+    
+#if( $keyType != "String" )
+    public Converter<String, ${entity.name}> getStringTo${entity.name}Converter() {
+        return new Converter<java.lang.String, ${entity.name}>() {
+            public ${entity.name} convert(String ${keyName}) {
+                return getObject().convert(getObject().convert(${keyName}, ${keyType}.class), ${entity.name}.class);
+            }
+        };
+    }
+    
+#end    
+    public Converter<${keyType}, ${entity.name}> getIdTo${entity.name}Converter() {
+        return new Converter<${keyType}, ${entity.name}>() {
+            public ${entity.name} convert(${keyType} ${keyName}) {
+                return ${entity.name.toLowerCase()}Service.load(${keyName});
+            }
+        };
+    }
+
+#end
+}

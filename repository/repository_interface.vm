@@ -7,7 +7,7 @@ import ${ENTITY_PKG}.${beanClass.name}Id;
 #set( $keyType = "${beanClass.name}Id" )
 #else
 #foreach( $field in $entity.keyAttributes )
-#set( $keyType = "$field.wrapperType" )
+#set( $keyType = "$field.formatedType(0)" )
 #end
 #end
 

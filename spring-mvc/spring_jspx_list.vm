@@ -1,84 +1,96 @@
+#set( $tools = $loader.newInstance("Tools") )
 #set( $_ = "$" )
 ##--------------------------------------------------------------------------------------------------------
+## Key fields = fields in Primary Key    
+#set( $keyFields = $entity.getAttributesByCriteria( $const.KEY ) )
+##--------------------------------------------------------------------------------------------------------
 ## Data fields = fields not in Primary Key and not in selected Links    
-#set( $dataFields = $entity.getAttributesByCriteria( $const.NOT_IN_SELECTED_LINKS ) )
+#set( $dataFields = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.NOT_IN_SELECTED_LINKS ) )
 ##--------------------------------------------------------------------------------------------------------
-## Link fields = fields not in Primary Key and used as FK in selected Links    
-#set( $linkFields = $entity.getAttributesByCriteria( $const.NOT_KEY, $const.IN_SELECTED_LINKS ) )
-##--------------------------------------------------------------------------------------------------------
-## Clé primaire
-#if ( $beanClass.hasCompositePrimaryKey() )
-#set( $keyType = "${beanClass.name}Id" )
+## Informations sur la clé primaire d'une entité
+#macro( defineKeyInfoForEntity, $entity )
+#if ( $entity.hasCompositePrimaryKey() )
+#set( $keyType = "${entity.name}Id" )
 #set( $keyName = "id" )
 #set( $keySetter = "setId" )
 #set( $keyGetter = "getId" )
 #else
+#set( $keyField = $entity.keyAttributes[0] )
+#set( $keyType = "$keyField.formatedType(0)" )
+#set( $keyName = "$keyField.formatedName(0)" )
+#set( $keySetter = $keyField.setter )
+#set( $keyGetter = $keyField.getter )
+#end
+#end
+##--------------------------------------------------------------------------------------------------------
+#defineKeyInfoForEntity( $entity )
+##--------------------------------------------------------------------------------------------------------
+## PRIMARY KEY IN URL
+## keyURLPath
+#set( $keyURLPath = "")
+#if ( $entity.hasCompositePrimaryKey() )
+## FIELDS
 #foreach( $field in $entity.keyAttributes )
-#set( $keyType = "$field.wrapperType" )
-#set( $keyName = "$field.formatedName(0)" )
-#set( $keyField = $field )
-#set( $keySetter = $field.setter )
-#set( $keyGetter = $field.getter )
+#set( $keyURLPath = $keyURLPath+"/${"+${entity.name.toLowerCase()}+"."+${field.formatedName(0)}+"}" )
 #end
+#else
+#set( $keyURLPath = $keyURLPath+"/${"+${entity.name.toLowerCase()}+"."+${keyName}+"}" )
 #end
+##--------------------------------------------------------------------------------------------------------
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:joda="http://www.joda.org/joda/time/tags" xmlns:s="http://www.springframework.org/tags" xmlns:form="http://www.springframework.org/tags/form" version="2.0">
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:joda="http://www.joda.org/joda/time/tags" xmlns:s="http://www.springframework.org/tags" xmlns:form="http://www.springframework.org/tags/form" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" xmlns:display="urn:jsptagdir:/WEB-INF/tags/display" version="2.0">
 <jsp:directive.page contentType="text/html;charset=UTF-8"/>
 <jsp:output omit-xml-declaration="yes"/>
 	<div class="container">
 		<fieldset class="col-sm-12 bordure">
-			<legend class="legende"><s:message code="${beanClass.name.toLowerCase()}"/></legend>
+			<legend class="legende"><s:message code="${entity.name.toLowerCase()}"/></legend>
 		
-			<c:if test="${_}{not empty message}">
-				<div id="message" class="alert alert-${_}{message.type.css}"><s:message code="${_}{message.message}"/></div>
-			</c:if>
+			<util:message message="${_}{message}" messages="${_}{messages}" />
 
 			<table class="table table-striped">
 				<thead>
 					<tr>
+## KEYS
+#foreach( $field in $keyFields )
+						<th><s:message code="${entity.name.toLowerCase()}.${field.formatedName(0)}"/></th>
+#end
+## FIELDS
 #foreach( $field in $dataFields )
-#set( $fieldName = "current.${field.name}" )
-#if( $field.isKeyElement() && $beanClass.hasCompositePrimaryKey() )
-#set( $fieldName = "current.key.${field.formatedName(0)}" )
+						<th><s:message code="${entity.name.toLowerCase()}.${field.formatedName(0)}"/></th>
 #end
-						<th><s:message code="${beanClass.name.toLowerCase()}.${field.formatedName(0)}"/></th>
-#end
+## LINKS
 #foreach( $link in $entity.selectedLinks )
-#if( !$link.isCardinalityManyToMany() && !$link.isCardinalityOneToMany() )
-						<th><s:message code="${beanClass.name.toLowerCase()}.${link.formatedName(0)}"/></th>
+#if ( $link.isCardinalityOneToOne() || $link.isCardinalityManyToOne() )
+						<th><s:message code="${entity.name.toLowerCase()}.${link.formatedName(0)}"/></th>
 #end
 #end
-						<s:url value="/${beanClass.name.toLowerCase()}/create" var="url_create" />
+						<s:url value="/${entity.name.toLowerCase()}/create" var="url_create" />
 						<th><a class="btn btn-info" href='${_}{url_create}'><s:message code="create"/></a></th>
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${_}{list${beanClass.name}s}" var="${beanClass.name.toLowerCase()}">
+					<c:forEach items="${_}{list${entity.name}s}" var="${entity.name.toLowerCase()}">
 						<tr>
+## KEYS
+#foreach( $field in $keyFields )
+							<td>${_}{${entity.name.toLowerCase()}.${field.formatedName(0)}}</td>
+#end
+## FIELDS
 #foreach( $field in $dataFields )
-#if( $field.isKeyElement() && $beanClass.hasCompositePrimaryKey() )
-							<td>${_}{${beanClass.name.toLowerCase()}.${keyName}.${field.formatedName(0)}}</td>
+#if( $field.formatedType(0) == "Date" ||  $field.formatedType(0) == "Calendar" )
+							<td><display:date value="${_}{${entity.name.toLowerCase()}.${field.formatedName(0)}}" /></td>
 #else
-							<td>${_}{${beanClass.name.toLowerCase()}.${field.formatedName(0)}}</td>
+							<td>${_}{${entity.name.toLowerCase()}.${field.formatedName(0)}}</td>
 #end
 #end
-## Lien vers les entités
+## LINKS
 #foreach( $link in $entity.selectedLinks )
-#if( !$link.isCardinalityManyToMany() && !$link.isCardinalityOneToMany() )
-							<td>${_}{${beanClass.name.toLowerCase()}.${link.formatedName(0)}}</td>
+#if ( $link.isCardinalityOneToOne() || $link.isCardinalityManyToOne() )
+							<td><s:eval expression="${entity.name.toLowerCase()}.${link.formatedName(0)}" /></td>
 #end
 #end
-## URL
-#set( $keyURLPath = "")
-#foreach( $field in $entity.keyAttributes )
-#if( $field.isKeyElement() && $beanClass.hasCompositePrimaryKey() )
-#set( $keyURLPath = $keyURLPath+"/${"+${beanClass.name.toLowerCase()}+"."+$keyName+"."+${field.formatedName(0)}+"}" )
-#else
-#set( $keyURLPath = $keyURLPath+"/${"+${beanClass.name.toLowerCase()}+"."+${field.formatedName(0)}+"}" )
-#end
-#end
-							<s:url var="edit${beanClass.name}Url" value="/${beanClass.name.toLowerCase()}$keyURLPath"/>
-							<td><a class="btn btn-info" href="${_}{edit${beanClass.name}Url}"><s:message code="edit"/></a></td>
+							<s:url var="edit${entity.name}Url" value="/${entity.name.toLowerCase()}$keyURLPath"/>
+							<td><a class="btn btn-info" href="${_}{edit${entity.name}Url}"><s:message code="edit"/></a></td>
 						</tr>
 					</c:forEach>
 				</tbody>

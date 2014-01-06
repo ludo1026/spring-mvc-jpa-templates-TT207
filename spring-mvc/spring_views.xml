@@ -2,10 +2,13 @@
 <!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration
 2.1//EN" "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
 <tiles-definitions>
-	<definition extends="default" name="${beanClass.name.toLowerCase()}/list">
-		<put-attribute name="body" value="/WEB-INF/views/${beanClass.name.toLowerCase()}/list.jspx" />
+	<definition extends="default" name="${entity.name.toLowerCase()}/list">
+		<put-attribute name="body" value="/WEB-INF/views/${entity.name.toLowerCase()}/${entity.name.toLowerCase()}_list.jspx" />
 	</definition>
-	<definition extends="default" name="${beanClass.name.toLowerCase()}/edit">
-		<put-attribute name="body" value="/WEB-INF/views/${beanClass.name.toLowerCase()}/edit.jspx" />
+	<definition extends="default" name="${entity.name.toLowerCase()}/create">
+		<put-attribute name="body" value="/WEB-INF/views/${entity.name.toLowerCase()}/${entity.name.toLowerCase()}_create.jspx" />
+	</definition>
+	<definition extends="default" name="${entity.name.toLowerCase()}/edit">
+		<put-attribute name="body" value="/WEB-INF/views/${entity.name.toLowerCase()}/${entity.name.toLowerCase()}_edit.jspx" />
 	</definition>
 </tiles-definitions>

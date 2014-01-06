@@ -10,7 +10,7 @@
 			<spring:message code="welcome_h3" arguments="${_}{app_name}" />
 		</h3>
       
-		<ul>
+		<ul class="entity">
 #foreach( $entity in $selectedEntities )
             <li><a href="${entity.name.toLowerCase()}">${entity.name}</a></li>
 #end
